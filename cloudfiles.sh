@@ -20,15 +20,15 @@ function usage {
 }
 
 function scurl {
-  curl -s -g -w '%{http_code}' -H Expect: -H "X-Storage-Token: $TOKEN" -X "$@"
+  curl -s -g -w '%{http_code}' -H Expect: -H "X-Auth-Token: $TOKEN" -X "$@"
 }
 
 if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
   usage
 else
-  LOGIN=`curl --dump-header - -s -H "X-Storage-User: $1" \
-         -H "X-Storage-Pass: $2" "https://api.mosso.com/auth"`
-  TOKEN=`echo "$LOGIN" | grep ^X-Storage-Token | sed 's/.*: //' | tr -d "\r\n"`
+  LOGIN=`curl --dump-header - -s -H "X-Auth-User: $1" \
+         -H "X-Auth-Key: $2" "https://api.mosso.com/auth"`
+  TOKEN=`echo "$LOGIN" | grep ^X-Auth-Token | sed 's/.*: //' | tr -d "\r\n"`
   URL=`echo "$LOGIN" | grep ^X-Storage-Url | sed 's/.*: //' | tr -d "\r\n"`
   if [ -z $TOKEN ] || [ -z $URL ]; then
     echo "Unable to auth."
@@ -37,9 +37,9 @@ else
   case $3 in
     LS)
       if [ -z $4 ]; then
-        curl -s -o - -H "Expect:" -H "X-Storage-Token: $TOKEN" "$URL"
+        curl -s -o - -H "Expect:" -H "X-Auth-Token: $TOKEN" "$URL"
       else
-        curl -s -o - -H "Expect:" -H "X-Storage-Token: $TOKEN" "$URL/$4"
+        curl -s -o - -H "Expect:" -H "X-Auth-Token: $TOKEN" "$URL/$4"
       fi
       exit 0
       ;;
