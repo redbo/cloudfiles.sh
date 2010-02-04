@@ -27,7 +27,7 @@ if [ -z $1 ] || [ -z $2 ] || [ -z $3 ]; then
   usage
 else
   LOGIN=`curl --dump-header - -s -H "X-Auth-User: $1" \
-         -H "X-Auth-Key: $2" "https://api.mosso.com/auth"`
+         -H "X-Auth-Key: $2" "https://auth.api.rackspacecloud.com/v1.0"`
   TOKEN=`echo "$LOGIN" | grep ^X-Auth-Token | sed 's/.*: //' | tr -d "\r\n"`
   URL=`echo "$LOGIN" | grep ^X-Storage-Url | sed 's/.*: //' | tr -d "\r\n"`
   if [ -z $TOKEN ] || [ -z $URL ]; then
