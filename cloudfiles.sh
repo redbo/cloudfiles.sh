@@ -21,7 +21,7 @@ function usage {
   echo "          RMDIR </container>" >&2
   echo "Options:  -e  use CLOUDFILES_USERNAME and CLOUDFILES_API_KEY" >&2
   echo "              environment variables instead of the command line" >&2
-  echo "              (so that they won't show up in a process listing" >&2
+  echo "              (so that they won't show up in a process listing)" >&2
   echo "          -u  specify authentication url" >&2
   echo "              (default: $auth_url)" >&2
   echo "          -s  silent operation (apart from errors)" >&2
