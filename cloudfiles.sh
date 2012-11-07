@@ -19,7 +19,7 @@ function usage {
   echo "          MKDIR </container>" >&2
   echo "          RM </container/object>" >&2
   echo "          RMDIR </container>" >&2
-  echo "Options:  -e  use CLOUDFILES_USERNAME and CLOUDFILES_API_KEY" >&2
+  echo "Options:  -e  use CLOUDFILES_USERNAME and CLOUDFILES_APIKEY" >&2
   echo "              environment variables instead of the command line" >&2
   echo "              (so that they won't show up in a process listing)" >&2
   echo "          -u  specify authentication url" >&2
@@ -34,7 +34,7 @@ function scurl {
 
 function authenticate {
   LOGIN=`curl --dump-header - -s -H "X-Auth-User: $CLOUDFILES_USERNAME" \
-         -H "X-Auth-Key: $CLOUDFILES_API_KEY" $auth_url`
+         -H "X-Auth-Key: $CLOUDFILES_APIKEY" $auth_url`
   TOKEN=`echo "$LOGIN" | grep ^X-Auth-Token | sed 's/.*: //' | tr -d "\r\n"`
   URL=`echo "$LOGIN" | grep ^X-Storage-Url | sed 's/.*: //' | tr -d "\r\n"`
   if [ -z $TOKEN ] || [ -z $URL ]; then
@@ -64,10 +64,10 @@ shift $(($OPTIND - 1))
 
 if [ ! "$opt_e" ]; then
   CLOUDFILES_USERNAME=$1; shift
-  CLOUDFILES_API_KEY=$1; shift
+  CLOUDFILES_APIKEY=$1; shift
 fi
 
-if [ ! "$CLOUDFILES_USERNAME" -o ! "$CLOUDFILES_API_KEY" ]; then
+if [ ! "$CLOUDFILES_USERNAME" -o ! "$CLOUDFILES_APIKEY" ]; then
   echo "$0: username and/or API key not specified" >&2
   usage
 fi
