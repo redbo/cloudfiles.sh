@@ -23,13 +23,13 @@ function usage {
   echo "              environment variables instead of the command line" >&2
   echo "              (so that they won't show up in a process listing)" >&2
   echo "          -u  specify authentication url" >&2
-  echo "              (default: $auth_url)" >&2
+  echo "              (default: $auth_url or \$CLOUDFILES_AUTHURL)" >&2
   echo "          -s  silent operation (apart from errors)" >&2
   exit 1
 }
 
 function scurl {
-  curl -s -g -w '%{http_code}' -H Expect: -H "X-Auth-Token: $TOKEN" -X "$@"
+  curl -s -g -w '~~~%{http_code}' -H Expect: -H "X-Auth-Token: $TOKEN" -X "$@"
 }
 
 function authenticate {
@@ -42,6 +42,10 @@ function authenticate {
     exit 4
   fi
 }
+
+if [ "$CLOUDFILES_AUTHURL" ]; then
+  auth_url=$CLOUDFILES_AUTHURL
+fi
 
 while getopts eu: opt; do
   case $opt in
@@ -71,7 +75,6 @@ if [ ! "$CLOUDFILES_USERNAME" -o ! "$CLOUDFILES_APIKEY" ]; then
   echo "$0: username and/or API key not specified" >&2
   usage
 fi
-
 
 cmd=$1; shift
 
@@ -128,8 +131,10 @@ case $cmd in
     usage
 esac
 
-if [ "$result" != 200 ]; then
-  echo "$0: failed with status code $result" >&2
+code=`echo $result | sed -e 's/^.*~~~//'`
+
+if [[ ! "$code" =~ ^20[0-9] ]]; then
+  echo "$0: failed with status code $code" >&2
   exit 1
 fi
 
