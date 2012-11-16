@@ -1,2 +1,3 @@
 cloudfiles.sh is a bash script that provides command-line access to
-basic functions of Mosso's Cloud Files, via curl.
+basic functions of Rackspace Cloud Files (formerly Mosso's Cloud Files),
+via curl.
